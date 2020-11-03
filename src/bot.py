@@ -7,6 +7,12 @@ from aiogram.utils.markdown import text, bold, italic, code
 
 from my_logging import logger
 from parser import pars_img
+from messages import (
+    download_sch_msg_1,
+    download_sch_msg_2,
+    schedule_img_msg_1,
+    schedule_img_msg_2
+)
 
 API_TOKEN = os.getenv("NOMAD_BOT_TOKEN")
 
@@ -14,38 +20,53 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
 
-@dp.message_handler(commands=['start', 'help'])
+@logger.catch
+@dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
     """Отправляет приветственное сообщение и помощь по боту"""
-    first_msg = text(bold("Бот для учёта финансов"))
-    today_msg = text(code("Сегодняшняя статистика:"), bold("/today"))
-    month_msg = text(code("За текущий месяц:"), bold("/month"))
-    expenses_msg = text(code("Последнии внесённые расходы:"), bold("/expenses"))
-    categories_msg = text(code("Категории трат:"), bold("/categories"))
-    add_finance_msg = text(bold("Чтобы добавить расход:"), italic("250 такси"))
+    first_msg = text(bold("Привет, меня зовут Васянчик, "
+                          "напиши /help чтобы узнать что я могу"))
 
-    msg = f"{first_msg}\n\n{today_msg}\n" \
-          f"{month_msg}\n" \
-          f"{expenses_msg}\n" \
-          f"{categories_msg}\n\n" \
-          f"{add_finance_msg}"
+    await message.answer(first_msg, parse_mode=ParseMode.MARKDOWN)
+
+
+@logger.catch
+@dp.message_handler(commands=['help'])
+async def send_help(message: types.Message):
+    """Отправляет руководство по боту"""
+
+    msg = f"{download_sch_msg_1} - {download_sch_msg_2} \n\n" \
+          f"{schedule_img_msg_1} - {schedule_img_msg_2}"
 
     await message.answer(msg, parse_mode=ParseMode.MARKDOWN)
 
 
-@dp.message_handler(commands=['parser'])
+@logger.catch
+@dp.message_handler(commands=['download'])
 async def pars_site(message: types.Message):
     pars_img()
-    msg = "Картинка успешно скачана" \
-          "Напиши /photo и я тебе скину его))"
+    msg = "Расписание успешно скачано 👌 \n" \
+          "Напиши /photo и я перешлю тебе его 📲"
     await message.answer(msg, parse_mode=ParseMode.MARKDOWN)
 
 
+@logger.catch
 @dp.message_handler(commands=['photo'])
 async def photo_command(message: types.Message):
-    with open('schedule/schedule.png', 'rb') as f:
-        contents = f.read()
+    """Отсылает фото расписания"""
+    try:
+        with open('schedule/schedule.png', 'rb') as f:
+            contents = f.read()
+    except FileNotFoundError:
+        logger.error("no png file")
+        msg_error = "Упс.. У меня нет расписания 😱 \n" \
+                    "Напиши: /download и я скачаю его 💾"
+        await message.answer(msg_error, parse_mode=ParseMode.MARKDOWN)
+
+    msg = "A вот и расписание👆\nСмотри мне! НЕ ПРОГУЛИВАЙ 🤡"
+
     await bot.send_photo(message.from_user.id, photo=contents)
+    await message.answer(msg, parse_mode=ParseMode.MARKDOWN)
 
 
 if __name__ == '__main__':
