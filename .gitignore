@@ -1,0 +1,7 @@
+env/
+*.pyc
+.idea/
+debug.json
+*.png
+__pycache__/
+env
