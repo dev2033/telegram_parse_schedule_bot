@@ -25,7 +25,7 @@ soup = BeautifulSoup(src, "lxml")
 
 
 def pars_img():
-    """Берет картинку с сайта"""
+    """Скачивает картинку с сайта"""
     try:
         image = soup.find(class_="page_raspis_block_img").find("img").get("src")
         urlretrieve(image, filename="schedule/schedule.png")

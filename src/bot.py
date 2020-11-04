@@ -15,6 +15,7 @@ from messages import (
 )
 from keyboard import choice
 
+
 API_TOKEN = os.getenv("NOMAD_BOT_TOKEN")
 
 bot = Bot(token=API_TOKEN)
@@ -82,6 +83,7 @@ async def photo_command(message: types.Message):
 
 
 # Обработчик кнопок
+@logger.catch
 @dp.callback_query_handler(text="cancel")
 async def cancel_buying(call: CallbackQuery):
     """
@@ -92,6 +94,7 @@ async def cancel_buying(call: CallbackQuery):
     await call.message.edit_reply_markup(reply_markup=None)
 
 
+@logger.catch
 @dp.callback_query_handler(text="download")
 async def download_buying(call: CallbackQuery):
     """
@@ -105,6 +108,7 @@ async def download_buying(call: CallbackQuery):
                       show_alert=True)
 
 
+@logger.catch
 @dp.callback_query_handler(text="schedule")
 async def schedule_buying(call: CallbackQuery):
     try:
@@ -123,6 +127,7 @@ async def schedule_buying(call: CallbackQuery):
     await call.answer(msg, show_alert=True)
 
 
+@logger.catch
 @dp.callback_query_handler(text="dev")
 async def download_buying(call: CallbackQuery):
     """
