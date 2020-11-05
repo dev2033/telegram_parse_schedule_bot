@@ -24,7 +24,7 @@ dp = Dispatcher(bot)
 
 @logger.catch
 @dp.message_handler(commands=['start'])
-async def send_welcome(message: types.Message):
+async def send_welcome(message: types.Message) -> None:
     """Отправляет приветственное сообщение и помощь по боту"""
     first_msg = text(bold("Привет, меня зовут Васянчик🧠, "
                           "напиши /help чтобы узнать что я могу \n"
@@ -49,7 +49,7 @@ async def send_help(message: types.Message):
 
 @logger.catch
 @dp.message_handler(commands=['download'])
-async def pars_site(message: types.Message):
+async def parse_site(message: types.Message):
     """
     Обработка команды /download
     Вызывает функцию pars_img, которая качает
@@ -77,9 +77,9 @@ async def photo_command(message: types.Message):
         await message.answer(msg_error, parse_mode=ParseMode.MARKDOWN)
 
     msg = "A вот и расписание👆\nСмотри мне! НЕ ПРОГУЛИВАЙ 🤡"
-
     await bot.send_photo(message.from_user.id, photo=contents)
     await message.answer(msg, parse_mode=ParseMode.MARKDOWN)
+    logger.info("Расписание успешно отправлено")
 
 
 # Обработчик кнопок
@@ -124,7 +124,7 @@ async def schedule_buying(call: CallbackQuery):
 
     msg = "А вот и расписание 🤡"
     await bot.send_photo(call.from_user.id, photo=contents)
-    await call.answer(msg, show_alert=True)
+    await call.answer(msg, show_alert=False)
 
 
 @logger.catch

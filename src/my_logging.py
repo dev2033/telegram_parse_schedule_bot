@@ -6,10 +6,10 @@ from loguru import logger
 
 
 logger.add(
-    "logging/debug.json",
-    format="{level} {message}",
+    "logging/debug.log",
+    format="{time} {level} {message}",
     level="DEBUG",
     rotation="2 MB",
     compression="zip",
-    serialize=True
+    # serialize=True
 )

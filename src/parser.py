@@ -24,11 +24,11 @@ src = req.text
 soup = BeautifulSoup(src, "lxml")
 
 
-def pars_img():
+def pars_img() -> None:
     """Скачивает картинку с сайта"""
     try:
         image = soup.find(class_="page_raspis_block_img").find("img").get("src")
         urlretrieve(image, filename="schedule/schedule.png")
-        logger.debug("Скачивание успешно завершено!")
+        logger.info("Скачивание успешно завершено!")
     except NotSchedule:
         logger.warning("NOT schedule")
