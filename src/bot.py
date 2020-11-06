@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ParseMode, CallbackQuery
 from aiogram.utils.markdown import text, bold
 
+from cropped_img import cropped_img
 from my_logging import logger
 from parser import pars_img
 from messages import (
@@ -56,6 +57,7 @@ async def parse_site(message: types.Message):
     фото с сайта и сохраняет в папке schedule
     """
     pars_img()
+    cropped_img()
     msg = "Расписание успешно скачано 👌 \n" \
           "Напиши /photo и я перешлю тебе его 📲"
     await message.answer(msg, parse_mode=ParseMode.MARKDOWN,
@@ -67,7 +69,7 @@ async def parse_site(message: types.Message):
 async def photo_command(message: types.Message):
     """Отсылает фото расписания"""
     try:
-        with open('schedule/schedule.png', 'rb') as f:
+        with open('schedule/schedule2.png', 'rb') as f:
             contents = f.read()
     except FileNotFoundError:
         logger.error("no png file")
@@ -102,6 +104,7 @@ async def download_buying(call: CallbackQuery):
     Парсит и скачивает фото с расписанием
     """
     pars_img()
+    cropped_img()
     await call.answer("Расписание скачал! \n"
                       "Нажми на вторую кнопку \n"
                       "и я скину его тебе 📩",
@@ -112,7 +115,7 @@ async def download_buying(call: CallbackQuery):
 @dp.callback_query_handler(text="schedule")
 async def schedule_buying(call: CallbackQuery):
     try:
-        with open('schedule/schedule.png', 'rb') as f:
+        with open('schedule/schedule2.png', 'rb') as f:
             contents = f.read()
     except FileNotFoundError:
         logger.error("no png file")
