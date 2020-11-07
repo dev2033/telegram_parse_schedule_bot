@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ParseMode, CallbackQuery
 from aiogram.utils.markdown import text, bold
 
+from cropped_img import cropped_img
 from my_logging import logger
 from parser import pars_img
 from messages import (
@@ -26,7 +27,7 @@ dp = Dispatcher(bot)
 
 @logger.catch
 @dp.message_handler(commands=['start'])
-async def send_welcome(message: types.Message):
+async def send_welcome(message: types.Message) -> None:
     """Отправляет приветственное сообщение и помощь по боту"""
     first_msg = text(bold("Привет, меня зовут Васянчик🧠, "
                           "напиши /help чтобы узнать что я могу \n"
@@ -51,13 +52,14 @@ async def send_help(message: types.Message):
 
 @logger.catch
 @dp.message_handler(commands=['download'])
-async def pars_site(message: types.Message):
+async def parse_site(message: types.Message):
     """
     Обработка команды /download
     Вызывает функцию pars_img, которая качает
     фото с сайта и сохраняет в папке schedule
     """
     pars_img()
+    cropped_img()
     msg = "Расписание успешно скачано 👌 \n" \
           "Напиши /photo и я перешлю тебе его 📲"
     await message.answer(msg, parse_mode=ParseMode.MARKDOWN,
@@ -69,7 +71,7 @@ async def pars_site(message: types.Message):
 async def photo_command(message: types.Message):
     """Отсылает фото расписания"""
     try:
-        with open('schedule/schedule.png', 'rb') as f:
+        with open('schedule/schedule2.png', 'rb') as f:
             contents = f.read()
     except FileNotFoundError:
         logger.error("no png file")
@@ -79,9 +81,9 @@ async def photo_command(message: types.Message):
         await message.answer(msg_error, parse_mode=ParseMode.MARKDOWN)
 
     msg = "A вот и расписание👆\nСмотри мне! НЕ ПРОГУЛИВАЙ 🤡"
-
     await bot.send_photo(message.from_user.id, photo=contents)
     await message.answer(msg, parse_mode=ParseMode.MARKDOWN)
+    logger.info("Расписание успешно отправлено")
 
 
 # Обработчик кнопок
@@ -104,6 +106,7 @@ async def download_buying(call: CallbackQuery):
     Парсит и скачивает фото с расписанием
     """
     pars_img()
+    cropped_img()
     await call.answer("Расписание скачал! \n"
                       "Нажми на вторую кнопку \n"
                       "и я скину его тебе 📩",
@@ -114,7 +117,7 @@ async def download_buying(call: CallbackQuery):
 @dp.callback_query_handler(text="schedule")
 async def schedule_buying(call: CallbackQuery):
     try:
-        with open('schedule/schedule.png', 'rb') as f:
+        with open('schedule/schedule2.png', 'rb') as f:
             contents = f.read()
     except FileNotFoundError:
         logger.error("no png file")
@@ -126,7 +129,7 @@ async def schedule_buying(call: CallbackQuery):
 
     msg = "А вот и расписание 🤡"
     await bot.send_photo(call.from_user.id, photo=contents)
-    await call.answer(msg, show_alert=True)
+    await call.answer(msg, show_alert=False)
 
 
 @logger.catch
