@@ -1,5 +1,6 @@
 """Сервер Telegram бота, запускаемый непосредственно"""
 import os
+import db_users_isp
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ParseMode, CallbackQuery
@@ -14,6 +15,7 @@ from messages import (
     info_developer_msg_1, info_developer_msg_2,
 )
 from keyboard import choice
+
 
 
 API_TOKEN = os.getenv("NOMAD_BOT_TOKEN")
@@ -136,6 +138,23 @@ async def download_buying(call: CallbackQuery):
     """
     msg = f"{info_developer_msg_1}: \n\n{info_developer_msg_2}"
     await call.answer(msg, show_alert=True)
+
+
+@logger.catch
+@dp.message_handler()
+async def user_registration(message: types.Message):
+    """Регистрация пользователей в базе"""
+    user_id = message.from_user.id
+    first_name = message.from_user.first_name
+    last_name = message.from_user.last_name
+    user_name = message.from_user.username
+    db_users_isp.add_data_db(user_id=user_id,
+                             first_name=first_name,
+                             last_name=last_name,
+                             user_name=user_name)
+
+    msg = f'{user_id}\n{first_name}\n{last_name}\n{user_name}'
+    await message.answer(msg)
 
 
 if __name__ == '__main__':
