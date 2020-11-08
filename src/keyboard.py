@@ -1,6 +1,13 @@
 """Кнопки для бота"""
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, \
+    ReplyKeyboardMarkup, KeyboardButton
 
+
+student = ReplyKeyboardMarkup(resize_keyboard=True)
+
+list_student = KeyboardButton(text="Список группы")
+
+student.add(list_student)
 
 choice = InlineKeyboardMarkup()
 

@@ -1,9 +1,12 @@
 """Сервер Telegram бота, запускаемый непосредственно"""
 import os
+
+from aiogram.dispatcher.filters import Text
+
 import db_users_isp
 
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.types import ParseMode, CallbackQuery
+from aiogram.types import ParseMode, CallbackQuery, ReplyKeyboardRemove, Message
 from aiogram.utils.markdown import text, bold
 
 from cropped_img import cropped_img
@@ -16,7 +19,7 @@ from messages import (
     info_developer_msg_1, info_developer_msg_2,
     registr_usr_msg_1, registr_usr_msg_2
 )
-from keyboard import choice
+from keyboard import choice, student
 
 
 API_TOKEN = os.getenv("NOMAD_BOT_TOKEN")
@@ -183,6 +186,24 @@ async def download_buying(call: CallbackQuery):
     await call.answer(msg, show_alert=False)
 
 
+@logger.catch
+@dp.message_handler(commands=['student'])
+async def list_student(message: types.Message):
+    """
+    По команде /student - отсылается
+    кнопка с запросом на вывод студентов
+    """
+    await message.answer("Чтобы показать список студентов "
+                         "группы 3ИСП2 нажми на кнопку ниже",
+                         reply_markup=student)
+
+
+@logger.catch
+@dp.message_handler(text="Список группы")
+async def students(message: types.Message):
+    """Выводит список студентов группы"""
+    await message.answer("Соня, петя, денис")
+
+
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
-

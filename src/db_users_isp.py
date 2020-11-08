@@ -20,15 +20,14 @@ def add_data_db(user_id, first_name, last_name, user_name):
     Добавляет пользоваетеля в базу данных и проверяет:
         если он есть в БД, то не добавлять
     """
-    dict_arg = [(user_id, first_name, last_name, user_name)]
+    list_arg = [(user_id, first_name, last_name, user_name)]
     cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id, ))
     check1 = cursor.fetchall()
     if not check1:
-        cursor.executemany('INSERT INTO users VALUES(?,?,?,?)', dict_arg)
+        cursor.executemany('INSERT INTO users VALUES(?,?,?,?)', list_arg)
     else:
         logger.info("Пользователь уже зарегистрован в базе данных")
     conn.commit()
 
 
 conn.commit()
-
