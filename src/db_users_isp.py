@@ -1,13 +1,12 @@
 import sqlite3
 
 from my_logging import logger
-from bot import user_registration
 
 
-conn = sqlite3.connect("db_pack/users.db")
+conn = sqlite3.connect("db_dir/users.db")
 cursor = conn.cursor()
 
-
+# Создание БД
 cursor.execute(
     """
     CREATE TABLE IF NOT EXISTS users 
@@ -17,12 +16,17 @@ cursor.execute(
 
 
 def add_data_db(user_id, first_name, last_name, user_name):
+    """
+    Добавляет пользоваетеля в базу данных и проверяет:
+        если он есть в БД, то не добавлять
+    """
     dict_arg = [(user_id, first_name, last_name, user_name)]
-    cursor.executemany(
-        """
-        INSERT INTO users(user_id, first_name, last_name, user_name) 
-        VALUES (?, ?, ?, ?)
-        """, dict_arg)
+    cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id, ))
+    check1 = cursor.fetchall()
+    if not check1:
+        cursor.executemany('INSERT INTO users VALUES(?,?,?,?)', dict_arg)
+    else:
+        logger.info("Пользователь уже зарегистрован в базе данных")
     conn.commit()
 
 
