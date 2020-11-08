@@ -5,7 +5,6 @@ import db_users_isp
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ParseMode, CallbackQuery
 from aiogram.utils.markdown import text, bold
-from aiogram.utils.exceptions import NetworkError
 
 from cropped_img import cropped_img
 from my_logging import logger
@@ -185,7 +184,5 @@ async def download_buying(call: CallbackQuery):
 
 
 if __name__ == '__main__':
-    try:
-        executor.start_polling(dp, skip_updates=True)
-    except NetworkError:
-        logger.warning("Проблема с подключеним к сети")
+    executor.start_polling(dp, skip_updates=True)
+
