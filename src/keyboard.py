@@ -11,11 +11,14 @@ schedule_btn = InlineKeyboardButton(text='Прислать расписание'
 cancel_btn = InlineKeyboardButton(text='Закрыть', callback_data='cancel')
 instruction_btn = InlineKeyboardButton(text='Инструкция по боту',
                                        callback_data='instruction',
-                                       url="https://t.me/develop_python_ub/130")
-developer_btn = InlineKeyboardButton(text="Разработчик",
+                                       url='https://t.me/develop_python_ub/130')
+developer_btn = InlineKeyboardButton(text='Разработчик',
                                      callback_data='dev')
+registration = InlineKeyboardButton(text='Регистрация',
+                                    callback_data='reg')
 
 choice.add(download_btn)
 choice.add(schedule_btn)
 choice.add(instruction_btn)
-choice.add(developer_btn, cancel_btn)
+choice.add(developer_btn, registration)
+choice.add(cancel_btn)

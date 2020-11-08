@@ -14,9 +14,9 @@ from messages import (
     schedule_img_msg_1, schedule_img_msg_2,
     start_msg_1, start_msg_2,
     info_developer_msg_1, info_developer_msg_2,
+    registr_usr_msg_1, registr_usr_msg_2
 )
 from keyboard import choice
-
 
 
 API_TOKEN = os.getenv("NOMAD_BOT_TOKEN")
@@ -40,10 +40,10 @@ async def send_welcome(message: types.Message) -> None:
 @dp.message_handler(commands=['help'])
 async def send_help(message: types.Message):
     """Отправляет руководство по боту"""
-
     msg = f"{download_sch_msg_1} - {download_sch_msg_2} \n\n" \
           f"{schedule_img_msg_1} - {schedule_img_msg_2} \n\n" \
           f"{start_msg_1} - {start_msg_2} \n\n" \
+          f"{registr_usr_msg_1} - {registr_usr_msg_2}\n\n" \
           f"Или воспользуйся клавиатурой ниже ⌨️"
 
     await message.answer(msg, parse_mode=ParseMode.MARKDOWN,
@@ -84,6 +84,26 @@ async def photo_command(message: types.Message):
     await bot.send_photo(message.from_user.id, photo=contents)
     await message.answer(msg, parse_mode=ParseMode.MARKDOWN)
     logger.info("Расписание успешно отправлено")
+
+
+@logger.catch
+@dp.message_handler(commands=['reg'])
+async def user_registration(message: types.Message):
+    """Регистрация пользователей в базе"""
+    user_id = message.from_user.id
+    first_name = message.from_user.first_name
+    last_name = message.from_user.last_name
+    user_name = message.from_user.username
+    db_users_isp.add_data_db(user_id=user_id,
+                             first_name=first_name,
+                             last_name=last_name,
+                             user_name=user_name)
+    msg = f'Твой ID: {user_id}\n' \
+          f'Имя: {first_name}\n' \
+          f'Фамилия: {last_name}\n' \
+          f'Юзернейм: {user_name}\n\n'
+    msg_2 = text(bold('Ты успешно зарегистрирован👌'))
+    await message.answer(msg + msg_2, parse_mode=ParseMode.MARKDOWN)
 
 
 # Обработчик кнопок
@@ -144,20 +164,23 @@ async def download_buying(call: CallbackQuery):
 
 
 @logger.catch
-@dp.message_handler()
-async def user_registration(message: types.Message):
-    """Регистрация пользователей в базе"""
-    user_id = message.from_user.id
-    first_name = message.from_user.first_name
-    last_name = message.from_user.last_name
-    user_name = message.from_user.username
+@dp.callback_query_handler(text="reg")
+async def download_buying(call: CallbackQuery):
+    """
+    Обрабатывает кнопку с callback = reg
+    Записывает user_id, firth_name, last_name, user_name
+    в базу + выводит это пользователю
+    """
+    user_id = call.from_user.id
+    first_name = call.from_user.first_name
+    last_name = call.from_user.last_name
+    user_name = call.from_user.username
     db_users_isp.add_data_db(user_id=user_id,
                              first_name=first_name,
                              last_name=last_name,
                              user_name=user_name)
-
-    msg = f'{user_id}\n{first_name}\n{last_name}\n{user_name}'
-    await message.answer(msg)
+    msg = "Ты успешно зарегистрирован\n\n"
+    await call.answer(msg, show_alert=False)
 
 
 if __name__ == '__main__':
