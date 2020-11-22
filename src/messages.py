@@ -15,9 +15,6 @@ schedule_img_msg_2 = text(code("команда, с помощью которой
 start_msg_1 = "/start"
 start_msg_2 = text(code("Начинает работу с ботом 📱"))
 
-registr_usr_msg_1 = "/reg"
-registr_usr_msg_2 = text(code("Регистрация пользователя"))
-
 name = "Danil"
 link_vk = "https://vk.com/d.otzgig"
 link_tg = "https://t.me/dev001010"
