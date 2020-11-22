@@ -5,9 +5,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, \
 
 student = ReplyKeyboardMarkup(resize_keyboard=True)
 
-list_student = KeyboardButton(text="Список группы")
-
-student.add(list_student)
+spam_key = ReplyKeyboardMarkup(resize_keyboard=True)
 
 choice = InlineKeyboardMarkup()
 
@@ -23,6 +21,10 @@ developer_btn = InlineKeyboardButton(text='Разработчик',
                                      callback_data='dev')
 registration = InlineKeyboardButton(text='Регистрация',
                                     callback_data='reg')
+
+phone = InlineKeyboardButton(text='Спам бабки')
+
+spam_key.add(phone)
 
 choice.add(download_btn)
 choice.add(schedule_btn)
