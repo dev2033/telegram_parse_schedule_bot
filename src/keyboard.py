@@ -1,13 +1,11 @@
 """Кнопки для бота"""
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, \
-    ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-student = ReplyKeyboardMarkup(resize_keyboard=True)
-
-spam_key = ReplyKeyboardMarkup(resize_keyboard=True)
-
+nagib = InlineKeyboardMarkup()
+spam_key = InlineKeyboardMarkup()
 choice = InlineKeyboardMarkup()
+
 
 download_btn = InlineKeyboardButton(text='Скачать расписание',
                                     callback_data='download')
@@ -22,9 +20,17 @@ developer_btn = InlineKeyboardButton(text='Разработчик',
 registration = InlineKeyboardButton(text='Регистрация',
                                     callback_data='reg')
 
-phone = InlineKeyboardButton(text='Спам бабки')
 
-spam_key.add(phone)
+# first = InlineKeyboardButton(text='1 клава', callback_data='phone')
+# second = InlineKeyboardButton(text='2 клава', callback_data='phone2')
+# three = InlineKeyboardButton(text='3 клава', callback_data='phone3')
+#
+# one = InlineKeyboardButton(text='Придурки', callback_data='phone4')
+#
+#
+# nagib.add(one)
+#
+# spam_key.add(first, second)
 
 choice.add(download_btn)
 choice.add(schedule_btn)

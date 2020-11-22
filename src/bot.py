@@ -17,8 +17,7 @@ from messages import (
     info_developer_msg_1, info_developer_msg_2,
     registr_usr_msg_1, registr_usr_msg_2
 )
-from keyboard import choice, student
-
+from keyboard import choice, spam_key, nagib
 
 API_TOKEN = os.getenv("NOMAD_BOT_TOKEN")
 
@@ -162,6 +161,36 @@ async def download_buying(call: CallbackQuery):
     """
     msg = f"{info_developer_msg_1}: \n\n{info_developer_msg_2}"
     await call.answer(msg, show_alert=True)
+
+
+# @logger.catch
+# @dp.message_handler(commands=['new'])
+# async def test(message: types.Message):
+#     await message.answer('какой то текст', reply_markup=spam_key)
+#
+#
+# @logger.catch
+# @dp.callback_query_handler(text="phone")
+# async def test1(call: CallbackQuery):
+#     await call.message.edit_reply_markup(reply_markup=nagib)
+#
+#
+# @logger.catch
+# @dp.callback_query_handler(text="phone2")
+# async def test2(call: CallbackQuery):
+#     await call.message.edit_reply_markup(reply_markup=choice)
+#
+#
+# @logger.catch
+# @dp.callback_query_handler(text="phone3")
+# async def test3(call: CallbackQuery):
+#     await call.message.edit_reply_markup(reply_markup=choice)
+#
+#
+# @logger.catch
+# @dp.callback_query_handler(text="phone4")
+# async def test3(call: CallbackQuery):
+#     await call.message.edit_reply_markup(reply_markup=choice)
 
 
 @logger.catch
