@@ -148,17 +148,17 @@ async def download_buying(call: CallbackQuery):
 
 
 @logger.catch
-@dp.callback_query_handler(text="update")
+@dp.callback_query_handler(text="remove")
 async def update_schedule(call: CallbackQuery):
-    """Обновляет расписание"""
+    """Удаляет расписание"""
     upd_schedule = glob.glob('schedule/*.png')
     for file in upd_schedule:
         try:
             os.remove(file)
         except OSError:
-            await call.answer("Не удалось обновить расписание", show_alert=True)
-            logger.exception("not update schedule")
-        await call.answer("Расписание обновлено", show_alert=True)
+            await call.answer("Не удалось удалить расписание", show_alert=True)
+            logger.exception("not remove schedule")
+        await call.answer("Расписание удалено", show_alert=True)
 
 
 @logger.catch
