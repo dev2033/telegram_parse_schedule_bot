@@ -5,7 +5,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 # Главная клавиатура
 choice = InlineKeyboardMarkup()
 
-update_schedule_btn = InlineKeyboardButton(text='Обновить расписание',
+update_schedule_btn = InlineKeyboardButton(text='Удалить старое расписание',
                                            callback_data='update')
 download_btn = InlineKeyboardButton(text='Скачать расписание',
                                     callback_data='download')

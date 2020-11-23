@@ -159,8 +159,6 @@ async def update_schedule(call: CallbackQuery):
             await call.answer("Не удалось обновить расписание", show_alert=True)
             logger.exception("not update schedule")
         await call.answer("Расписание обновлено", show_alert=True)
-    pars_img()
-    cropped_img()
 
 
 @logger.catch

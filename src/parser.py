@@ -24,6 +24,7 @@ src = req.text
 soup = BeautifulSoup(src, "lxml")
 
 
+@logger.catch
 def pars_img() -> None:
     """Скачивает картинку с сайта"""
     try:
