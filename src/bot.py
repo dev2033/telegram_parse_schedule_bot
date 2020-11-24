@@ -1,6 +1,7 @@
 """Сервер Telegram бота, запускаемый непосредственно"""
 import glob
 import os
+import time
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ParseMode, CallbackQuery
@@ -142,8 +143,14 @@ async def download_buying(call: CallbackQuery):
     Обрабатывает кнопку с callback = download
     Парсит и скачивает фото с расписанием
     """
-    pars_img()
-    cropped_img()
+    try:
+        pars_img()
+        time.sleep(3)
+        cropped_img()
+        time.sleep(3)
+    except Exception:
+        logger.exception("no download schedule")
+        await call.answer("Не удалось скачать расписание! Повтори позже :(")
     await call.answer("Расписание скачано! 📩")
 
 
@@ -155,6 +162,7 @@ async def update_schedule(call: CallbackQuery):
     for file in upd_schedule:
         try:
             os.remove(file)
+            logger.info("Расписание удалено")
         except OSError:
             await call.answer("Не удалось удалить расписание", show_alert=True)
             logger.exception("not remove schedule")
