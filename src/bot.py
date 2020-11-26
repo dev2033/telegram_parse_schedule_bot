@@ -7,6 +7,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ParseMode, CallbackQuery
 from aiogram.utils.markdown import text, bold
 
+from remove import remove
 from cropped_img import cropped_img
 from my_logging import logger
 from parser import pars_img
@@ -156,17 +157,13 @@ async def download_buying(call: CallbackQuery):
 
 @logger.catch
 @dp.callback_query_handler(text="remove")
-async def update_schedule(call: CallbackQuery):
+async def remove_schedule(call: CallbackQuery):
     """Удаляет расписание"""
-    upd_schedule = glob.glob('schedule/*.png')
-    for file in upd_schedule:
-        try:
-            os.remove(file)
-            logger.info("Расписание удалено")
-        except OSError:
-            await call.answer("Не удалось удалить расписание", show_alert=True)
-            logger.exception("not remove schedule")
+    try:        
+        remove()
         await call.answer("Расписание удалено", show_alert=True)
+    except Exception:
+        await call.answer("Не удалось удалить расписание", show_alert=True)
 
 
 @logger.catch
