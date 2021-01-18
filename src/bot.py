@@ -1,8 +1,7 @@
 """Сервер Telegram бота, запускаемый непосредственно"""
-import glob
 import os
-import time
 
+import pafy
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ParseMode, CallbackQuery
 from aiogram.utils.markdown import text, bold
@@ -11,19 +10,21 @@ from remove import remove
 from cropped_img import cropped_img
 from my_logging import logger
 from parser import pars_img
+# from youtube_download_video import download_video
 from messages import (
     download_sch_msg_1, download_sch_msg_2,
     schedule_img_msg_1, schedule_img_msg_2,
     start_msg_1, start_msg_2,
-    info_developer_msg_1, info_developer_msg_2
 )
 from keyboard import choice, profile_keyboard
-
 
 API_TOKEN = os.getenv("NOMAD_BOT_TOKEN")
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
+
+
+"""Обработчик команд"""
 
 
 @logger.catch
@@ -73,21 +74,20 @@ async def photo_command(message: types.Message):
     try:
         with open('schedule/schedule2.png', 'rb') as f:
             contents = f.read()
-    except FileNotFoundError:
+            await bot.send_photo(message.from_user.id, photo=contents)
+            logger.info("Расписание успешно отправлено")
+    except Exception:
         logger.error("no png file")
         msg_error = "Упс.. У меня нет расписания 😱 \n" \
                     "Напиши: /download и я скачаю его 💾\n" \
                     "Или нажми на кнопку - Скачать расписание 🕹"
         await message.answer(msg_error, parse_mode=ParseMode.MARKDOWN)
 
-    msg = "A вот и расписание👆\nСмотри мне! НЕ ПРОГУЛИВАЙ 🤡"
-    await bot.send_photo(message.from_user.id, photo=contents)
-    await message.answer(msg, parse_mode=ParseMode.MARKDOWN)
-    logger.info("Расписание успешно отправлено")
+
+"""Обработчик кнопок"""
 
 
-# Обработчик кнопок
-
+# кнопки по профилю
 @logger.catch
 @dp.callback_query_handler(text="my_id")
 async def user_id(call: CallbackQuery):
@@ -120,6 +120,8 @@ async def user_lastname(call: CallbackQuery):
     await call.answer(msg, show_alert=True)
 
 
+# -----------------------------------------------------
+
 @logger.catch
 @dp.callback_query_handler(text="home")
 async def home_keyboard(call: CallbackQuery):
@@ -146,12 +148,10 @@ async def download_buying(call: CallbackQuery):
     """
     try:
         pars_img()
-        time.sleep(3)
         cropped_img()
-        time.sleep(3)
     except Exception:
         logger.exception("no download schedule")
-        await call.answer("Не удалось скачать расписание! Повтори позже :(")
+        await call.answer("Не удалось скачать расписание! Повтори позже :-(")
     await call.answer("Расписание скачано! 📩")
 
 
@@ -159,7 +159,7 @@ async def download_buying(call: CallbackQuery):
 @dp.callback_query_handler(text="remove")
 async def remove_schedule(call: CallbackQuery):
     """Удаляет расписание"""
-    try:        
+    try:
         remove()
         await call.answer("Расписание удалено", show_alert=True)
     except Exception:
@@ -172,28 +172,11 @@ async def schedule_buying(call: CallbackQuery):
     try:
         with open('schedule/schedule2.png', 'rb') as f:
             contents = f.read()
-    except FileNotFoundError:
+            await bot.send_photo(call.from_user.id, photo=contents)
+    except Exception:
         logger.error("no png file")
-        msg_error = "Упс.. У меня нет расписания 😱 \n" \
-                    "Напиши: /download и я скачаю его 💾\n" \
-                    "Или воспользуйся клавиатурой ниже⌨️\n\n" \
-                    "* Если клавиатуры нет, напиши /start "
+        msg_error = "Упс.. У меня нет расписания 😱"
         await call.answer(msg_error, show_alert=True)
-
-    msg = "А вот и расписание 🤡"
-    await bot.send_photo(call.from_user.id, photo=contents)
-    await call.answer(msg, show_alert=False)
-
-
-@logger.catch
-@dp.callback_query_handler(text="dev")
-async def developer_info(call: CallbackQuery):
-    """
-    Обрабатывает кнопку с callback = instruction
-    Показывает информацию о разработчике
-    """
-    msg = f"{info_developer_msg_1}: \n\n{info_developer_msg_2}"
-    await call.answer(msg, show_alert=True)
 
 
 @logger.catch

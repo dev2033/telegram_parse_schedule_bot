@@ -11,18 +11,18 @@ download_btn = InlineKeyboardButton(text='Скачать расписание',
                                     callback_data='download')
 schedule_btn = InlineKeyboardButton(text='Прислать расписание',
                                     callback_data='schedule')
+youtube_btn = InlineKeyboardButton(text='Скачать видео с Youtube',
+                                   callback_data='youtube_d')
 cancel_btn = InlineKeyboardButton(text='Закрыть', callback_data='cancel')
-help_btn = InlineKeyboardButton(text='Помощь', callback_data='help')
-developer_btn = InlineKeyboardButton(text='Разработчик',
-                                     callback_data='dev')
+
 
 profile = InlineKeyboardButton(text='Мой профиль', callback_data='profile')
 
 choice.add(update_schedule_btn)
 choice.add(download_btn)
 choice.add(schedule_btn)
-choice.add(help_btn, profile)
-choice.add(developer_btn)
+choice.add(profile)
+choice.add(youtube_btn)
 choice.add(cancel_btn)
 
 
@@ -42,3 +42,5 @@ profile_keyboard.add(my_username)
 profile_keyboard.add(my_first_name)
 profile_keyboard.add(my_last_name)
 profile_keyboard.add(home)
+
+
