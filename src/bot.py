@@ -9,11 +9,6 @@ from aiogram.utils.markdown import text, bold
 from cropped_img import cropped_img
 from my_logging import logger
 from parser import pars_img
-from messages import (
-    download_sch_msg_1, download_sch_msg_2,
-    schedule_img_msg_1, schedule_img_msg_2,
-    start_msg_1, start_msg_2,
-)
 from keyboard import choice, profile_keyboard
 
 API_TOKEN = os.getenv("NOMAD_BOT_TOKEN")
@@ -29,39 +24,9 @@ dp = Dispatcher(bot)
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message) -> None:
     """Отправляет приветственное сообщение и помощь по боту"""
-    first_msg = text(bold("Привет, меня зовут Васянчик🧠, "
-                          "напиши /help чтобы узнать что я могу \n"
-                          "Или воспользуйся кнопками ниже"))
+    first_msg = text(bold("Привет, меня зовут Васянчик🧠. \n "
+                          "Я могу скинуть тебе расписание шараги"))
     await message.answer(first_msg, parse_mode=ParseMode.MARKDOWN,
-                         reply_markup=choice)
-
-
-@logger.catch
-@dp.message_handler(commands=['help'])
-async def send_help(message: types.Message):
-    """Отправляет руководство по боту"""
-    msg = f"{download_sch_msg_1} - {download_sch_msg_2} \n\n" \
-          f"{schedule_img_msg_1} - {schedule_img_msg_2} \n\n" \
-          f"{start_msg_1} - {start_msg_2} \n\n" \
-          f"Или воспользуйся клавиатурой ниже ⌨️"
-
-    await message.answer(msg, parse_mode=ParseMode.MARKDOWN,
-                         reply_markup=choice)
-
-
-@logger.catch
-@dp.message_handler(commands=['download'])
-async def parse_site(message: types.Message):
-    """
-    Обработка команды /download
-    Вызывает функцию pars_img, которая качает
-    фото с сайта и сохраняет в папке schedule
-    """
-    pars_img()
-    cropped_img()
-    msg = "Расписание успешно скачано 👌 \n" \
-          "Напиши /photo и я перешлю тебе его 📲"
-    await message.answer(msg, parse_mode=ParseMode.MARKDOWN,
                          reply_markup=choice)
 
 
@@ -70,6 +35,12 @@ async def parse_site(message: types.Message):
 async def photo_command(message: types.Message):
     """Отсылает фото расписания"""
     try:
+        os.remove('schedule/schedule.png')
+        os.remove('schedule/schedule2.png')
+        logger.info("Удалил расписание")
+        time.sleep(2)
+        pars_img()
+        cropped_img()
         with open('schedule/schedule2.png', 'rb') as f:
             contents = f.read()
             await bot.send_photo(message.from_user.id, photo=contents)
@@ -141,7 +112,6 @@ async def cancel_buying(call: CallbackQuery):
 @dp.callback_query_handler(text="schedule")
 async def schedule_buying(call: CallbackQuery):
     try:
-        # remove()
         os.remove('schedule/schedule.png')
         os.remove('schedule/schedule2.png')
         logger.info("Удалил расписание")
