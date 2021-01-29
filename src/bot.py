@@ -1,16 +1,14 @@
 """Сервер Telegram бота, запускаемый непосредственно"""
 import os
+import time
 
-import pafy
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ParseMode, CallbackQuery
 from aiogram.utils.markdown import text, bold
 
-from remove import remove
 from cropped_img import cropped_img
 from my_logging import logger
 from parser import pars_img
-# from youtube_download_video import download_video
 from messages import (
     download_sch_msg_1, download_sch_msg_2,
     schedule_img_msg_1, schedule_img_msg_2,
@@ -140,36 +138,16 @@ async def cancel_buying(call: CallbackQuery):
 
 
 @logger.catch
-@dp.callback_query_handler(text="download")
-async def download_buying(call: CallbackQuery):
-    """
-    Обрабатывает кнопку с callback = download
-    Парсит и скачивает фото с расписанием
-    """
-    try:
-        pars_img()
-        cropped_img()
-    except Exception:
-        logger.exception("no download schedule")
-        await call.answer("Не удалось скачать расписание! Повтори позже :-(")
-    await call.answer("Расписание скачано! 📩")
-
-
-@logger.catch
-@dp.callback_query_handler(text="remove")
-async def remove_schedule(call: CallbackQuery):
-    """Удаляет расписание"""
-    try:
-        remove()
-        await call.answer("Расписание удалено", show_alert=True)
-    except Exception:
-        await call.answer("Не удалось удалить расписание", show_alert=True)
-
-
-@logger.catch
 @dp.callback_query_handler(text="schedule")
 async def schedule_buying(call: CallbackQuery):
     try:
+        # remove()
+        os.remove('schedule/schedule.png')
+        os.remove('schedule/schedule2.png')
+        logger.info("Удалил расписание")
+        time.sleep(2)
+        pars_img()
+        cropped_img()
         with open('schedule/schedule2.png', 'rb') as f:
             contents = f.read()
             await bot.send_photo(call.from_user.id, photo=contents)

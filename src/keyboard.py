@@ -5,24 +5,15 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 # Главная клавиатура
 choice = InlineKeyboardMarkup()
 
-update_schedule_btn = InlineKeyboardButton(text='Удалить старое расписание',
-                                           callback_data='remove')
-download_btn = InlineKeyboardButton(text='Скачать расписание',
-                                    callback_data='download')
 schedule_btn = InlineKeyboardButton(text='Прислать расписание',
                                     callback_data='schedule')
-youtube_btn = InlineKeyboardButton(text='Скачать видео с Youtube',
-                                   callback_data='youtube_d')
-cancel_btn = InlineKeyboardButton(text='Закрыть', callback_data='cancel')
 
+cancel_btn = InlineKeyboardButton(text='Закрыть', callback_data='cancel')
 
 profile = InlineKeyboardButton(text='Мой профиль', callback_data='profile')
 
-choice.add(update_schedule_btn)
-choice.add(download_btn)
 choice.add(schedule_btn)
 choice.add(profile)
-choice.add(youtube_btn)
 choice.add(cancel_btn)
 
 
