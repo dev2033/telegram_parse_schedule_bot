@@ -1,6 +1,7 @@
 """
 Тут происходит парсинг картинки с расписанием
 """
+import os
 from urllib.request import urlretrieve
 from bs4 import BeautifulSoup
 

@@ -1,3 +1,5 @@
+import os
+
 from PIL import Image
 
 from exceptions import NotCroppedImg
@@ -11,6 +13,8 @@ def cropped_img():
         image = Image.open('schedule/schedule.png')
         cropped = image.crop((568, 543, 681, 711))
         cropped.save('schedule/schedule2.png')
+        if not os.path.isfile('schedule/schedule2.png'):
+            os.remove('schedule/schedule2.png')
         logger.info("Изображение успешно обрезано")
     except NotCroppedImg:
         raise NotCroppedImg("not cropped image")

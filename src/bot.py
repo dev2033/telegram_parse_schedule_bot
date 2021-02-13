@@ -35,13 +35,17 @@ async def send_welcome(message: types.Message) -> None:
 async def photo_command(message: types.Message):
     """Отсылает фото расписания"""
     try:
-        os.remove('schedule/schedule.png')
-        os.remove('schedule/schedule2.png')
+        if not os.path.isdir('schedule'):
+            os.mkdir('schedule')
+        # if os.path.isfile('schedule/schedule.png'):
+        #     os.remove('schedule/schedule.png')
         logger.info("Удалил расписание")
         time.sleep(2)
         pars_img()
         cropped_img()
         with open('schedule/schedule2.png', 'rb') as f:
+            if not os.path.isfile('schedule/schedule2.png'):
+                os.remove('schedule/schedule2.png')
             contents = f.read()
             await bot.send_photo(message.from_user.id, photo=contents)
             logger.info("Расписание успешно отправлено")
