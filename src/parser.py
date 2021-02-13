@@ -35,3 +35,4 @@ def pars_img() -> None:
         logger.info("Скачивание успешно завершено!")
     except NotSchedule:
         logger.warning("NOT schedule")
+        raise NotSchedule
